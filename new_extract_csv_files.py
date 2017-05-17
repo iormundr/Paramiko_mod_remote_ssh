@@ -173,6 +173,8 @@ if __name__ == '__main__':
 
 
 '''
+below functionalities will be added to the script
+
 cat servers_list  | awk '{print "scp reptall.new  aaizenbe@"$1":/home/aaizenbe/"}'
 cat servers_list  | awk '{print "ssh -q aaizenbe@"$1" -n \" /opt/perf/bin/extract -xp -r /home/aaizenbe/reptall.new -f /home/aaizenbe/Extract_120517_"$1"_glb_30days.csv -G -b 04/08/17 00:00 -e 05/07/17 23:59 \""}'
 cat servers_list  | awk '{print "scp aaizenbe@"$1":/home/aaizenbe/Extract_120517_"$1"_glb_30days.csv ."}'
