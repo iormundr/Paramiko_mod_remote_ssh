@@ -160,6 +160,7 @@ def connect_wrapper(hostname, username, cmd, indata=None, output='display'):
 def read_csv_file(filename):
 	'''
 	Reading a csv file into a list. file consists of 'server name','Application name','Login name (username)'
+	server01,web_server,root
 	server02,app_server,guest2
 	server03,app2_server,adams
 	'''
