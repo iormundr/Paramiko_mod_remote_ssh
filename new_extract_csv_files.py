@@ -219,7 +219,7 @@ def remote_extract_command(server_name,user_name,days_back):
 	return file_name_to_return
 	
 if __name__ == '__main__':
-	if len(sys.argv) == 4:
+	if len(sys.argv) == 5:
 		days_to_extract = sys.argv[1]
 		prod_list = read_csv_file(sys.argv[2])	
 		metric_file = sys.argv[3]
@@ -237,5 +237,6 @@ if __name__ == '__main__':
 				file_name_to_copy_back = file_name_to_copy_back.split("/")
 				remote_copy_from_server(info['server_name'],info['user_name'],file_name_to_copy_back[-1],path_to_copy_back)
 	else:
-		print("missing days and file name and metric file")
+		print("Missing input parameters")
+		print("Example: ./extract_csv_files.py 30 prod_servers.temp cpu_mem.reptall /tmp/")
 	print('end')
