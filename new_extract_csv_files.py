@@ -160,6 +160,8 @@ def connect_wrapper(hostname, username, cmd, indata=None, output='display'):
 def read_csv_file(filename):
 	'''
 	Reading a csv file into a list. file consists of 'server name','Application name','Login name (username)'
+	server02,app_server,guest2
+	server03,app2_server,adams
 	'''
 	result_list = []
 	with open(filename, 'r') as f:
@@ -180,34 +182,60 @@ def remote_copy_to_server(server_name,user_name,file_name,destination_path):
 		ssh.connect(hostname=server_name, username=user_name,allow_agent=True)
 		sftp = ssh.open_sftp()
 	except paramiko.AuthenticationException as e:
-		print("Unable to copy to",server_name)
+		print("Unable to establish connection to",server_name)
 		print("Error:",e)
+		return -1
+	except socket.error as e:
+		print("Wrong server name")
+		print("Eror:",e)
 		return -1
 	sftp.put(file_name,destination_path + file_name)
 	sftp.close()
-	print("copied successfully!")
+	return 0
 	
 
+def remote_copy_from_server(server_name,user_name,file_name,destination_path):
+	ssh = paramiko.SSHClient()
+	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+	try:
+		ssh.connect(hostname=server_name, username=user_name,allow_agent=True)
+		sftp = ssh.open_sftp()
+	except paramiko.AuthenticationException as e:
+		print("Unable to establish connection to",server_name)
+		print("Error:",e)
+		return -1
+	sftp.get(file_name,destination_path + file_name)
+	sftp.close()
+	return 0
+	
 def remote_extract_command(server_name,user_name,days_back):
-	date = datetime.datetime.now().strftime("%Y%m%d")
-	build_command = '/opt/perf/bin/extract -xp -r /home/aaizenbe/reptall.new -f /home/aaizenbe/Extract_120517_"$1"_glb_30days.csv -G -b 04/08/17 00:00 -e 05/07/17 23:59'
-
+	end_date = (datetime.datetime.now() + datetime.timedelta(-1)).strftime("%Y%m%d")
+	end_date_slash_format = (datetime.datetime.now() + datetime.timedelta(-1)).strftime("%m/%d/%d")
+	start_date_slash_format = (datetime.datetime.now() + datetime.timedelta(-int(days_back))).strftime("%m/%d/%y")
+	extract_command = '/opt/perf/bin/extract -xp -r /home/' + user_name + '/reptall.new -f /home/' + user_name + '/Extract_' + end_date + '_' + server_name + '_glb_' + days_back + 'days.csv -G -b ' + start_date_slash_format + ' 00:00 -e ' + end_date_slash_format + ' 23:59'
+	file_name_to_return = '/home/' + user_name + '/Extract_' + end_date + '_' + server_name + '_glb_' + days_back + 'days.csv'
+	connect_wrapper(server_name,user_name,'rm -f /home/' + user_name + '/Extract_*' + server_name + '*.csv',output='noDisplay')
+	connect_wrapper(server_name,user_name,extract_command,output='noDisplay')
+	return file_name_to_return
 	
-
 if __name__ == '__main__':
-
-
-	#connect_wrapper_no_add_output('vmbdcl007','aaizenbe','uptime')
-	#for server_name in prod_servers_list:
-	#   status,output = connect_wrapper(server_name['name'],server_name['username'],'uptime',output='do-not-display-display')
-	#   if status == 0:
-	#	   print("server {} is ok".format(server_name['name']))
-	prod_list = read_csv_file('prod_servers.csv')	
-	#for i in prod_list:
-	#	print(i['server_name'])
-	
-
-'''
-cat servers_list  | awk '{print "ssh -q aaizenbe@"$1" -n \" /opt/perf/bin/extract -xp -r /home/aaizenbe/reptall.new -f /home/aaizenbe/Extract_120517_"$1"_glb_30days.csv -G -b 04/08/17 00:00 -e 05/07/17 23:59 \""}'
-cat servers_list  | awk '{print "scp aaizenbe@"$1":/home/aaizenbe/Extract_120517_"$1"_glb_30days.csv ."}'
-'''
+	if len(sys.argv) == 4:
+		days_to_extract = sys.argv[1]
+		prod_list = read_csv_file(sys.argv[2])	
+		metric_file = sys.argv[3]
+		path_to_copy_back = sys.argv[4]
+		print("Using {} as an input file for servers list ".format(prod_list))
+		for info in prod_list:
+			ls_command = "ls -rtl /home/" + info['user_name'].strip() + "/Extract_*.csv | awk '{print $NF}'"
+			print(info['server_name'])
+			status = remote_copy_to_server(info['server_name'],info['user_name'],metric_file,'/home/' + info['user_name'] + '/')
+			if status != 0:
+				print("Server {} was skipped due to a problem".format(info['server_name']))
+			else:
+				print("status: ok")
+				file_name_to_copy_back = remote_extract_command(info['server_name'],info['user_name'],days_to_extract)
+				file_name_to_copy_back = file_name_to_copy_back.split("/")
+				remote_copy_from_server(info['server_name'],info['user_name'],file_name_to_copy_back[-1],path_to_copy_back)
+	else:
+		print("missing days and file name and metric file")
+	print('end')
