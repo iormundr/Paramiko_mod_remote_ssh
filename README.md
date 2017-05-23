@@ -49,5 +49,7 @@ percentile , appserv1,      0.76,     22.01,       Reporting Batch
 average    , appserv1,      0.36,     21.43,       Reporting Batch
 ------------------------------------------------------------------
 ```
+## TODO:
+* Add comments in the code.
 
 usage: paramiko, ssh, sftp ...
