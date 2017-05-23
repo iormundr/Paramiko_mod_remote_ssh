@@ -257,4 +257,4 @@ if __name__ == '__main__':
 		
 	else:
 		print("Missing input parameters")
-		print("Example: ./extract_csv_files.py 30 prod_servers.temp cpu_mem.reptall /tmp/")
+		print("Example: ./extract_and_calc.py 30 prod_servers.temp cpu_mem.reptall /tmp/")
