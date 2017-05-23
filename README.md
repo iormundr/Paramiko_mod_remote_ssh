@@ -1,6 +1,4 @@
-<snippet>
-  <content><![CDATA[
-${1:Project Name}
+# Paramiko_mod_remote_ssh
 
 This script will run on a dictionary of servers that will extract perf data from HP Glance via extract command over ssh paramiko connection.
 
@@ -51,8 +49,3 @@ percentile , appserv1,      0.76,     22.01,       Reporting Batch
 average    , appserv1,      0.36,     21.43,       Reporting Batch
 ------------------------------------------------------------------
 ```
-
-
-
-></content>
-</snippet>
