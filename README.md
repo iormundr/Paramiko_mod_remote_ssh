@@ -17,10 +17,13 @@ percentile.py
 Calculating  average and percentile for every csv file that was created previously 
 
 USAGE:
-'''
+```
 ./extract_and_calc.py 30 prod_servers.temp cpu_mem.reptall /tmp/extract_dir_prod_servers/
-'''
+```
 
+## Example
+
+```
 [alex@testserver cp_scripts]$ ./extract_csv_files.py 30 prod_servers.temp cpu_mem.reptall /tmp/vision23
 appserv1
 status: ok
@@ -34,5 +37,6 @@ average    , appserv2,      4.55,     27.84,  Reporting Batch
 percentile , appserv1,      0.76,     22.01,  Reporting Batch
 average    , appserv1,      0.36,     21.43,  Reporting Batch
 ------------------------------------------------------------------
+```
 ></content>
 </snippet>
