@@ -50,8 +50,8 @@ def percentile_average_calculation_from_csv_files(files,perc,servers_list,errors
 				m = np.percentile(mem,perc)
 				ac = np.average(cpu)
 				am = np.average(mem)
-				print("percentile , {:>5s},{:>10.2f},{:>10.2f},  {:>10s}".format(file_name[2],c,m,servers_list[server_name]))
-				print("average    , {:>5s},{:>10.2f},{:>10.2f},  {:>10s}".format(file_name[2],ac,am,servers_list[server_name]))
+				print("percentile , {:>5s},{:>10.2f},{:>10.2f},    {:>18s}".format(file_name[2],c,m,servers_list[server_name]))
+				print("average    , {:>5s},{:>10.2f},{:>10.2f},    {:>18s}".format(file_name[2],ac,am,servers_list[server_name]))
 			else:
 				print("Stats for",file_name[2], servers_list[server_name],"are not avaliable. Files are empty.")
 
