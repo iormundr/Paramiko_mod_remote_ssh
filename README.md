@@ -15,7 +15,6 @@ percentile.py
 Calculating  average and percentile for every csv file that was created previously 
 
 USAGE:
-
 ./extract_and_calc.py 30 prod_servers.temp cpu_mem.reptall /tmp/extract_dir_prod_servers/
 
 [alex@testserver cp_scripts]$ ./extract_csv_files.py 30 prod_servers.temp cpu_mem.reptall /tmp/vision23
