@@ -32,11 +32,12 @@ status: ok
 
 Measurement,   Server,       CPU,    Memory,           Application
 ------------------------------------------------------------------
-percentile , appserv2,     10.30,     33.47,  Reporting Batch
-average    , appserv2,      4.55,     27.84,  Reporting Batch
-percentile , appserv1,      0.76,     22.01,  Reporting Batch
-average    , appserv1,      0.36,     21.43,  Reporting Batch
+percentile , ehpap312,     10.30,     33.47,       Reporting Batch
+average    , ehpap312,      4.55,     27.84,       Reporting Batch
+percentile , ehpap311,      0.76,     22.01,       Reporting Batch
+average    , ehpap311,      0.36,     21.43,       Reporting Batch
 ------------------------------------------------------------------
+
 ```
 ></content>
 </snippet>
