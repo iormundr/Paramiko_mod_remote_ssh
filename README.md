@@ -16,6 +16,19 @@ percentile.py
 
 Calculating  average and percentile for every csv file that was created previously 
 
+cpu_mem.reptall
+
+Is a standard configuration input file from HP Glance component
+
+prod_server.temp
+
+CSV file, with the below structure. I use 'server name', 'app name' and username
+```
+appserv1,Reporting Batch,alex
+appserv2,Reporting Batch,alex
+```
+
+
 USAGE:
 ```
 ./extract_and_calc.py 30 prod_servers.temp cpu_mem.reptall /tmp/extract_dir_prod_servers/
@@ -32,12 +45,14 @@ status: ok
 
 Measurement,   Server,       CPU,    Memory,           Application
 ------------------------------------------------------------------
-percentile , ehpap312,     10.30,     33.47,       Reporting Batch
-average    , ehpap312,      4.55,     27.84,       Reporting Batch
-percentile , ehpap311,      0.76,     22.01,       Reporting Batch
-average    , ehpap311,      0.36,     21.43,       Reporting Batch
+percentile , appserv2,     10.30,     33.47,       Reporting Batch
+average    , appserv2,      4.55,     27.84,       Reporting Batch
+percentile , appserv1,      0.76,     22.01,       Reporting Batch
+average    , appserv1,      0.36,     21.43,       Reporting Batch
 ------------------------------------------------------------------
-
 ```
+
+
+
 ></content>
 </snippet>
