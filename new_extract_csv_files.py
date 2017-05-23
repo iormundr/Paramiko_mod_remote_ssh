@@ -1,4 +1,4 @@
-#!/usr/local/python-3.6.0/bin/python3
+#!/usr/bin/env python3
 import paramiko
 import logging
 import socket
@@ -7,7 +7,10 @@ import datetime
 import sys
 import csv
 import datetime
+import os
+import percentile
 
+perc = 95 #95th percentile to calculate for percentile.py input
 
 # ================================================================
 # class MySSH
@@ -217,17 +220,29 @@ def remote_extract_command(server_name,user_name,days_back):
 	file_name_to_return = '/home/' + user_name + '/Extract_' + end_date + '_' + server_name + '_glb_' + days_back + 'days.csv'
 	connect_wrapper(server_name,user_name,'rm -f /home/' + user_name + '/Extract_*' + server_name + '*.csv',output='noDisplay')
 	connect_wrapper(server_name,user_name,extract_command,output='noDisplay')
+	file_name_to_return = file_name_to_return.split("/")
 	return file_name_to_return
+
+def make_sure_path_exists(path):
+	try:
+		os.mkdir(path)
+	except FileExistsError:
+		print("Path alraedy exists",path)
+	except PermissionError:
+		raise SystemExit("Warning: Cannot create directory.\nCheck permission to the path",path)
+	if path[-1] != '/':
+		path = path + '/'
+		return path
+	return path
+
 	
 if __name__ == '__main__':
 	if len(sys.argv) == 5:
 		days_to_extract = sys.argv[1]
-		prod_list = read_csv_file(sys.argv[2])	
+		input_list = read_csv_file(sys.argv[2])	
 		metric_file = sys.argv[3]
-		path_to_copy_back = sys.argv[4]
-		print("Using {} as an input file for servers list ".format(prod_list))
-		for info in prod_list:
-			ls_command = "ls -rtl /home/" + info['user_name'].strip() + "/Extract_*.csv | awk '{print $NF}'"
+		path_to_copy_back = make_sure_path_exists(sys.argv[4])
+		for info in input_list:
 			print(info['server_name'])
 			status = remote_copy_to_server(info['server_name'],info['user_name'],metric_file,'/home/' + info['user_name'] + '/')
 			if status != 0:
@@ -235,9 +250,11 @@ if __name__ == '__main__':
 			else:
 				print("status: ok")
 				file_name_to_copy_back = remote_extract_command(info['server_name'],info['user_name'],days_to_extract)
-				file_name_to_copy_back = file_name_to_copy_back.split("/")
 				remote_copy_from_server(info['server_name'],info['user_name'],file_name_to_copy_back[-1],path_to_copy_back)
+		#server_list = percentile.read_csv_file(sys.argv[2])
+		path_to_copy_back += 'Extract_*.csv'
+		percentile.main(perc,path_to_copy_back,sys.argv[2])
+		
 	else:
 		print("Missing input parameters")
 		print("Example: ./extract_csv_files.py 30 prod_servers.temp cpu_mem.reptall /tmp/")
-	print('end')
