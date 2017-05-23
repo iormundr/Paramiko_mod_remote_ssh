@@ -27,7 +27,7 @@ appserv2,Reporting Batch,alex
 ```
 
 
-USAGE:
+USAGE: 30 days back of history extract 
 ```
 ./extract_and_calc.py 30 prod_servers.temp cpu_mem.reptall /tmp/extract_dir_prod_servers/
 ```
